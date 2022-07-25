@@ -62,5 +62,17 @@ class OpenOtherAppsTest {
         val settingsValidation =
             uiDevice.findObject(UiSelector().packageName("com.android.settings"))
         Assert.assertTrue(settingsValidation.exists())
+
+        //Находим в контейнере настройки по названию "Display"
+        val textUiSelector: UiSelector = UiSelector().scrollable(true)
+        UiScrollable(textUiSelector).getChildByText(textUiSelector,"Display")
+
+        //Находим объект в контейнере
+        val systemUiObject = uiDevice.findObject(UiSelector().text("Display"))
+
+        //объект существует
+        Assert.assertTrue(systemUiObject.exists())
+        //Открываем
+        systemUiObject.clickAndWaitForNewWindow()
     }
 }
