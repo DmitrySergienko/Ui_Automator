@@ -17,6 +17,7 @@ import com.geekbrains.tests.repository.GitHubApi
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.view.details.DetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -37,13 +38,38 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         toDetailsActivityButton.setOnClickListener {
             startActivity(DetailsActivity.getIntent(this, totalCount))
         }
+      // searchActivityButton.setOnClickListener {
+      //     startActivity(DetailsActivity.getIntent(this, totalCount))
+      // }
         setQueryListener()
+        setQueryListenerNew()
         setRecyclerView()
     }
 
     private fun setRecyclerView() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
+    }
+    private fun setQueryListenerNew(){
+        searchActivityButton.setOnClickListener{
+
+                val query = searchEditText.text.toString()
+                if (query.isNotBlank()) {
+                    presenter.searchGitHub(query)
+                    //return@OnEditorActionListener true
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        getString(R.string.enter_search_word),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                   // return@OnEditorActionListener false
+                }
+
+
+        }
+
+
     }
 
     private fun setQueryListener() {
