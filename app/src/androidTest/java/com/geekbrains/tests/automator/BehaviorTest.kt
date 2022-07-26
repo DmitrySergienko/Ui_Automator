@@ -67,8 +67,18 @@ class BehaviorTest {
         //Устанавливаем значение
         editText.text = "UiAutomator"
         //Отправляем запрос через Espresso
-        Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
-            .perform(ViewActions.pressImeActionButton())
+      // Espresso.onView(ViewMatchers.withId(R.id.searchEditText))
+      //     .perform(ViewActions.pressImeActionButton())
+
+        //Находим кнопку
+        val toSearchButton: UiObject2 = uiDevice.findObject(
+            By.res(
+                packageName,
+                "searchActivityButton"
+            )
+        )
+        //Кликаем по ней
+        toSearchButton.click()
 
         //Ожидаем конкретного события: появления текстового поля totalCountTextView.
         //Это будет означать, что сервер вернул ответ с какими-то данными, то есть запрос отработал.
@@ -110,7 +120,40 @@ class BehaviorTest {
         Assert.assertEquals(changedText.text, "Number of results: 0")
     }
 
+    @Test
+    fun test_DetailsScreenResultRepresentation () {
+
+        //Через uiDevice находим editText
+        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
+        //Устанавливаем значение
+        editText.text = "Android"
+
+        //Находим кнопку
+        val toSearchButton: UiObject2 = uiDevice.findObject(
+            By.res(
+                packageName,
+                "searchActivityButton"
+            )
+        )
+        //Кликаем по ней
+        toSearchButton.click()
+        //Ожидаем конкретного события: появления текстового поля totalCountTextView.
+        //Это будет означать, что сервер вернул ответ с какими-то данными, то есть запрос отработал.
+        val changedText =
+            uiDevice.wait(
+                Until.findObject(By.res(packageName, "totalCountTextView")),
+                TIMEOUT
+            )
+
+        //Убеждаемся, что сервер вернул корректный результат. Обратите внимание, что количество
+        //результатов может варьироваться во времени, потому что количество репозиториев постоянно меняется.
+        Assert.assertEquals("Number of results: 1351806", changedText.text.toString())
+    }
+
     companion object {
         private const val TIMEOUT = 5000L
     }
+
+
+
 }
